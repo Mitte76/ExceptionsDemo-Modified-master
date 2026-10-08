@@ -10,8 +10,10 @@
             try
             {
                 Console.WriteLine("Försöker läsa fil och räkna...");
+                var result = ProcessFile(AppContext.BaseDirectory, "numbers.txt");
                 //var result = ProcessFile(AppContext.BaseDirectory + @"fff\", "numbers.txt");
-                var result = ProcessFile(AppContext.BaseDirectory, "1numbers.txt");
+                //var result = ProcessFile("", "numbers.txt");
+                //var result = ProcessFile(AppContext.BaseDirectory, "");
 
                 Console.WriteLine($"\nResultat: {result}");
             }
