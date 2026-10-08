@@ -11,7 +11,7 @@
             {
                 Console.WriteLine("Försöker läsa fil och räkna...");
                 //var result = ProcessFile(AppContext.BaseDirectory + @"fff\", "numbers.txt");
-                var result = ProcessFile(AppContext.BaseDirectory, "numbers.txt");
+                var result = ProcessFile(AppContext.BaseDirectory, "1numbers.txt");
 
                 Console.WriteLine($"\nResultat: {result}");
             }
@@ -59,18 +59,7 @@
                 throw new ArgumentException("Katalogsökväg får inte vara tom eller null.", nameof(directory));
             }
 
-            // Om Katalogen inte finns vill vi signalera
-            if (!Directory.Exists(directory))
-            {
-                throw new DirectoryNotFoundException("Katalogen finns inte: " + directory);
-            }
-
             string path = Path.Combine(directory, fileName);
-            // Om filen inte finns vill vi signalera
-            if (!File.Exists(path))
-            {
-                throw new FileNotFoundException("Filen finns inte: " + path);
-            }
 
             StreamReader? reader = null;
             try
@@ -100,6 +89,9 @@
                 throw; // När du i `catch` bara vill logga/analysera,
                        // men låta anroparen (t.ex. en högre nivå i applikationen)
                        // bestämma hur man ska återhämta sig. 
+            }
+            catch (DirectoryNotFoundException ex){
+                throw new DirectoryNotFoundException("Katalogen finns inte: " + directory);
             }
             finally
             {
