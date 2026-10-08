@@ -10,8 +10,8 @@
             try
             {
                 Console.WriteLine("Försöker läsa fil och räkna...");
-                var path = Path.Combine(AppContext.BaseDirectory, "numbers.txt");
-                var result = ProcessFile(path);
+                //var result = ProcessFile(AppContext.BaseDirectory + @"fff\", "numbers.txt");
+                var result = ProcessFile(AppContext.BaseDirectory, "numbers.txt");
 
                 Console.WriteLine($"\nResultat: {result}");
             }
@@ -33,7 +33,7 @@
             catch (Exception ex)
             {
                 // Fallback för alla övriga obekanta fel
-                Console.WriteLine($"Okänt fel: {ex.Message}");
+                Console.WriteLine($"Övrigt fel: {ex.Message}");
             }
             finally
             {
@@ -45,24 +45,43 @@
         }
 
         // Exempel på metod som själv kastar ett undantag (throw)
-        static double ProcessFile(string fileName)
+        static double ProcessFile(string directory, string fileName)
         {
-            // Om filnamnet är tomt: fel vi vill signalera
+            // Om filnamnet är tomt vill vi signalera
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 throw new ArgumentException("Filnamn får inte vara tomt eller null.", nameof(fileName));
             }
 
+            // Om Katalogsökvägen är tom vill vi signalera
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                throw new ArgumentException("Katalogsökväg får inte vara tom eller null.", nameof(directory));
+            }
+
+            // Om Katalogen inte finns vill vi signalera
+            if (!Directory.Exists(directory))
+            {
+                throw new DirectoryNotFoundException("Katalogen finns inte: " + directory);
+            }
+
+            string path = Path.Combine(directory, fileName);
+            // Om filen inte finns vill vi signalera
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("Filen finns inte: " + path);
+            }
+
             StreamReader? reader = null;
             try
             {
-                reader = new StreamReader(fileName);
+                reader = new StreamReader(path);
 
                 string? line = reader.ReadLine();
                 if (line == null)
                 {
                     throw new InvalidOperationException("Filen är tom.");
-                }                
+                }
                 // Försöker omvandla text till tal
                 int number = int.Parse(line); // Kan ge FormatException
 
